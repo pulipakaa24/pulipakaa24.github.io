@@ -1,0 +1,231 @@
+body {
+    /* Set a fallback background color */
+    background-color: #220000; /* A very dark, deep red */
+    
+    /* Create the radial gradient */
+    /*
+     * circle at center: Defines the shape and position of the gradient.
+     * #440000 0%: Starts with a slightly brighter, warm dark red at the center.
+     * #330000 50%: Transitions to a darker red by 50% of the radius.
+     * #220000 100%: Ends with a very dark, almost black-red at the edges.
+     */
+    background-image: radial-gradient(circle at center, 
+                                     #330000 0%, /* Brighter red at the core */
+                                     #220000 50%, /* Medium dark red */
+                                     #110000 100% /* Very dark red/black at the edges */
+                                    );
+
+    background-attachment: fixed;
+    
+    /* Ensure the background covers the entire viewport */
+    min-height: 100vh; /* Make sure the body takes up at least the full viewport height */
+    margin: 0; /* Remove default body margin */
+    padding: 0; /* Remove default body padding */
+    
+    /* Optional: To ensure content is placed on top of this background */
+    position: relative;
+    z-index: 1; /* Keep content above any default layers */
+    padding-top: 70px;
+}
+
+#title {
+  display: flex; /* Make it a flex container */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  height: calc(100vh - 100px);
+  font-family: "Mozilla Headline", sans-serif;
+}
+
+.nav-link {
+  margin-right: 20px;
+  margin-left: 20px;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-family: "Mozilla Headline", sans-serif;
+  transition: color 0.3s ease;
+
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 5px;
+}
+
+.nav-link:hover {
+  color: rgba(255, 255, 255, 0.5) !important; /* Solid white on hover */
+}
+
+.nav-link::after {
+  content: ''; /* Essential for pseudo-elements */
+  position: absolute; /* Position relative to .nav-link */
+  bottom: 0; /* Place at the bottom of the link */
+  left: 0; /* Start from the left */
+  width: 100%;
+  height: 2px; /* Thickness of the line */
+  background-color: rgba(255, 255, 255, 0.5); /* Color of the line */
+  
+  /* --- The Animation Magic --- */
+  /* 1. Start scaled down to zero width */
+  transform: scaleX(0); 
+  
+  /* 2. Set the origin for the EXIT animation (shrinking) to the right */
+  transform-origin: right; 
+  
+  /* 3. Animate the transform property */
+  transition: transform 0.4s ease-in-out; 
+}
+
+/* On hover, expand the line to 100% width */
+#mainNavbar .nav-link:hover::after {
+  /* 1. Scale to full width */
+  transform: scaleX(1); 
+  
+  /* 2. Set the origin for the ENTRANCE animation (growing) to the left */
+  transform-origin: left; 
+}
+
+/* Optional: Style for the active/current page link */
+#mainNavbar .nav-link.active {
+    color: white !important; /* Solid white for active link */
+}
+
+#mainNavbar .nav-link.active::after {
+    /* 1. Scale to full width */
+  transform: scaleX(1); 
+  
+  /* 2. Set the origin for the ENTRANCE animation (growing) to the left */
+  transform-origin: left; 
+  background-color: white; /* Or a different color if you want active to be distinct */
+}
+
+#MyName {
+  color: white; /* Ensure your name is visible */
+  font-size: 3em;
+  font-weight: bold;
+}
+
+.main-name {
+  display: inline-block; /* Or block, if you prefer it to take full available width */
+  position: relative; /* Needed for positioning the pseudo-element */
+  margin-bottom: 5px; /* Space between name and tagline */
+}
+
+.main-name::after {
+    content: ''; /* Essential for pseudo-elements */
+    display: block; /* Make it a block-level element */
+    width: 100%; /* Make it the same width as .main-name */
+    height: 2px; /* Thickness of the line */
+    background-color: rgba(255, 255, 255, 0.5); /* Color of the line (subtle white) */
+    margin-top: 5px; /* Adjust vertical position */
+    position: absolute; /* Position relative to .main-name */
+    bottom: 0; /* Place it at the bottom of .main-name */
+    left: 0; /* Align to the left of .main-name */
+}
+
+#Engineering {
+  color: rgba(255, 255, 255, 0.496); /* Ensure your name is visible */
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#mainNavbar {
+    /* For translucency: Use rgba for background-color */
+    /* The last value (0.7) is the alpha channel for transparency (0 = fully transparent, 1 = fully opaque) */
+    background-color: rgba(0, 0, 0, 0.5); /* Example: Dark background with 70% opacity */
+    /* background-color: rgba(248, 249, 250, 0.7); /* Example: Light background with 70% opacity */
+
+    /* For the glossy/frosted glass effect: backdrop-filter */
+    /* This applies visual effects to the area *behind* the element */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%); /* For Safari support */
+
+    /* Optional: Add a subtle box-shadow for depth */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* Ensure text and links are readable against the translucent background */
+    /* If using navbar-dark, text is usually light. If navbar-light, text is dark. */
+    color: white; /* Or adjust to a color that contrasts well */
+}
+
+/* Adjust navbar links for better contrast on translucent background */
+#mainNavbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important; /* Slightly transparent white for links */
+    transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+#mainNavbar .nav-link:hover {
+    color: white !important; /* Solid white on hover */
+}
+
+/* If you have a brand/logo, ensure it's visible */
+#mainNavbar .navbar-brand {
+    color: white !important; /* Example for a light brand text */
+}
+
+.scroll-section {
+  opacity: 0;
+  transform: scale(0.9);
+  
+  /* A hint for the browser to optimize this element for transformation */
+  will-change: opacity, transform;
+}
+
+h2 {
+  font-family: "Mozilla Headline", sans-serif;
+  padding-bottom: 10px;
+}
+
+h5 {
+  font-family: "Google Sans Code", monospace;
+  padding-bottom: 10px;
+}
+
+p {
+  font-family: "Google Sans Code", monospace;
+}
+
+/*
+ * This is the final state we transition to.
+ * When a section has this class, it becomes fully visible and normal-sized.
+*/
+.scroll-section.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.image-stack {
+  display: grid;
+  place-items: center;
+  position: relative;
+  width: 100%;
+  /* Add perspective for a more 3D effect on hover */
+  perspective: 1000px;
+}
+
+.image-stack__item {
+  width: 60%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  transition: transform 0.4s ease, z-index 0.4s; /* Add z-index to the transition */
+}
+
+.image-stack__item--bottom {
+  transform: translateX(-15%) translateY(-15%);
+}
+
+.image-stack__item--top {
+  transform: translateX(15%) translateY(15%);
+  filter: drop-shadow(-2px 4px 15px rgba(0, 0, 0, 0.2));
+}
+
+/* --- HOVER EFFECTS --- */
+/* When hovering over the container, if the bottom image is hovered... */
+.image-stack:has(.image-stack__item--bottom:hover) .image-stack__item--bottom {
+  transform: scale(1.05) translateX(-15%) translateY(-15%); /* Enlarge and straighten the bottom image */
+  z-index: 2; /* Bring it to the very front */
+}
+
+.image-stack:has(.image-stack__item--bottom:hover) .image-stack__item--top {
+  transform: scale(0.9) translateX(15%) translateY(15%); /* Push the top image back */
+  z-index: 1; /* Bring it to the very front */
+}
