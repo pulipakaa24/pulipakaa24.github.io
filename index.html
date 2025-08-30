@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Aditya Pulipaka</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="overrides.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +54,14 @@
         <div id="scrollspyHeading1" class="scroll-section">
           <h2>Projects</h2>
           <div class="container">
-            <h5>Autonomous Vehicle Lidar SLAM Pipeline</h5>
+            <h3>Autonomous Vehicle Lidar SLAM Pipeline</h3>
+            <div class="row">
+              <p>
+                While many resources exist for lidar odometry, SLAM, and map-based localization, packages that combine accurate localization and mapping functionality
+                into a cohesive ROS2 node collection are few and far between. For the NOVA group at UT Dallas, the need for such a package was driven by a desire for ease
+                of mapping and accurate localization based on an incrementally built, highly accurate global map.
+              </p>
+            </div>
             <div class="row" style="margin-bottom: 5rem;">
               <div class="col-8">
                 <p>Step 1: Offline Localization Tool</p>
@@ -69,22 +77,81 @@
               </div>
               <div class="col-4">
                 <div class="image-stack">
-                  <img src="bigSlam.png" width="50%" class="image-stack__item image-stack__item--bottom">
-                  <img src="smalSlam.png" width="50%" class="image-stack__item image-stack__item--top">
+                  <img src="bigSlam.png" width="50%" class="image-stack__item image-stack__item--bottom" title="Full SLAM run with KISS_SLAM, with fewer mismatches">
+                  <img src="smalSlam.png" width="50%" class="image-stack__item image-stack__item--top" title="Partial SLAM run with previous KISS_ICP + g2o optimizer, with inaccurate areas marked.">
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-bottom: 5rem;">
               <div class="col-4">
-
+                <div class="image-stack">
+                  <img src="Live localization.png" width="50%" class="image-stack__item image-stack__item--bottom" title="Close-Up view of the vertical accuracy of localized pose when compared to ground truth.">
+                  <img src="live localization far shot.png" width="50%" class="image-stack__item image-stack__item--top" title="Zoomed out view of overall path accuracy of localized pose">
+                </div>
               </div>
               <div class="col-8">
                 <p>Step 2: Online Localization Node</p>
                 <p>
                   Porting the localization code from static python files to ROS2 nodes was relatively straightforward. After the Carla
-                  simulator environment was configured for the new node and 
+                  simulator environment was configured for the new node and visualization was setup to listen to the localized pose message,
+                  a real-time pose estimate was reported on-screen for comparison with ground truth.
+                </p>
+                <p>
+                  On the left are visualizations demonstrating the accuracy of the KISS_ICP-based localization node. This version of the
+                  node relied on Open3D's feature-based global registration to achieve an initial pose estimate, which was then passed to
+                  KISS_ICP for refined odometry using the pre-mapped point cloud.
                 </p>
               </div>
+            </div>
+            <div class="row" style="margin-bottom: 5rem;">
+              <div class="col-8">
+                <p>Step 3: Online Mapping Node</p>
+                <p>
+                  The KISS_SLAM pipeline presents a high-fidelity mapping solution that can be run on rosbags of pre-collected lidar scans.
+                  However, the separate actions of recording Rosbags and then running the KISS_SLAM pipeline on them could be consolidated
+                  into a single process, with KISS_SLAM configurations managed by the mapping node to avoid variation in output.
+                </p>
+                <p>
+                  A key requirement for this node was an accurate initial pose, considering that although KISS_SLAM guaranteed high fidelity
+                  within the output map, the alignment with the world coordinate frame had to be ensured. This was done by depending on two
+                  consecutive high-accuracy GPS positions to determine initial position and orientation.
+                </p>
+              </div>
+              <div class="col-4">
+                <img src="FullMap.png" width="50%" class="image-stack__item image-stack__item--top" title="Point cloud result of full mapping run using mapping node.">
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 5rem;">
+              <p>Step 4: GPS approximation and Map Addition</p>
+              <p>
+                A problem that quickly presented itself as the mapping and localization system was tested was the issue of global registration
+                on a prohibitively large global map. To minimize the search area, an inaccurate GPS reading was used to first crop the global map
+                to a padded area around the GPS coordinate. The same feature-based registration system was used, but a reduced search area reduced registration time and increased accuracy significantly,
+                while maintaining the margin of error with a large buffer added to each dimension of the cropped cloud.
+              </p>
+              <p>
+                This method also proved highly useful for the map addition functionality, a feature that allowed for the continuation of an existing map by
+                matching current pose within the already-mapped portion, then adding the next scans with a custom KISS_SLAM variant capable of completing map closures
+                on an initial input pointcloud as well as the dynamically built pointclouds.
+              </p>
+            </div>
+            <div class="row">
+              <h5>Full Demo</h5>
+              <p>
+                In all, 1 mapping node, 2 localization nodes (one with global registration, one with cropping method), and 3 map addition nodes (one with global registration,
+                one with gps cropping, and one depending on high-accuracy gps) were developed, providing ample options for various data availability scenarios.
+              </p>
+            </div>
+            <div class="video-container">
+              <iframe
+                width="100%"
+                height="80%"
+                src="https://www.youtube.com/embed/qvsudqgiFFI?si=VQyi9pIUO97PPmoZ"
+                title="lidar_SLAM Demo"
+                frameborder="0"
+                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture;"
+                allowfullscreen
+              ></iframe>
             </div>
           </div>
         </div>
